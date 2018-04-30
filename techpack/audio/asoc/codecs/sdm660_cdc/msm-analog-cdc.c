@@ -3868,11 +3868,11 @@ static int msm_anlg_cdc_device_down(struct snd_soc_component *component)
 	msm_anlg_cdc_boost_off(component);
 	sdm660_cdc_priv->hph_mode = NORMAL_MODE;
 
-	/* 40ms to allow boost to discharge */
-	msleep(40);
 	/* Disable PA to avoid pop during codec bring up */
 	snd_soc_component_update_bits(component,
 			MSM89XX_PMIC_ANALOG_RX_HPH_CNP_EN, 0x30, 0x00);
+	/* 40ms to allow boost to discharge */
+	msleep(40);
 	snd_soc_component_update_bits(component,
 			MSM89XX_PMIC_ANALOG_SPKR_DRV_CTL, 0x80, 0x00);
 	snd_soc_component_write(component,
