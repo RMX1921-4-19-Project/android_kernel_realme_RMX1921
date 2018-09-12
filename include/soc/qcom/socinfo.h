@@ -54,6 +54,8 @@
 	of_flat_dt_is_compatible(of_get_flat_dt_root(), "qcom,sa8150")
 #define early_machine_is_kona()	\
 	of_flat_dt_is_compatible(of_get_flat_dt_root(), "qcom,kona")
+#define early_machine_is_sdm712()	\
+	of_flat_dt_is_compatible(of_get_flat_dt_root(), "qcom,sdm670")
 #define early_machine_is_lito()	\
 	of_flat_dt_is_compatible(of_get_flat_dt_root(), "qcom,lito")
 #define early_machine_is_orchid()	\
@@ -127,6 +129,7 @@
 #define early_machine_is_sm8150()	0
 #define early_machine_is_sa8150()	0
 #define early_machine_is_kona()		0
+#define early_machine_is_sdm712()	0
 #define early_machine_is_lito()		0
 #define early_machine_is_orchid()	0
 #define early_machine_is_bengal()	0
@@ -198,6 +201,7 @@ enum msm_cpu {
 	MSM_CPU_8937,
 	MSM_CPU_8917,
 	MSM_CPU_SDM439,
+	MSM_CPU_SDM712,
 	MSM_CPU_SDM429,
 	MSM_CPU_QM215,
 	MSM_CPU_8953,

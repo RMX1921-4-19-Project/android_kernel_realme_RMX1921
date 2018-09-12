@@ -324,6 +324,9 @@ static struct msm_soc_info cpu_of_id[] = {
 	[455] = {MSM_CPU_KONA, "KONA"},
 	[496] = {MSM_CPU_KONA, "KONA"},
 
+	/* SDM712 ID */
+	[393] = {MSM_CPU_SDM712, "SDM712"},
+
 	/* Lito ID */
 	[400] = {MSM_CPU_LITO, "LITO"},
 	[440] = {MSM_CPU_LITO, "LITO"},
@@ -1258,6 +1261,10 @@ static void * __init setup_dummy_socinfo(void)
 		dummy_socinfo.id = 356;
 		strlcpy(dummy_socinfo.build_id, "kona - ",
 		sizeof(dummy_socinfo.build_id));
+	} else if (early_machine_is_sdm712()) {
+		dummy_socinfo.id = 393;
+		strlcpy(dummy_socinfo.build_id, "sdm712 - ",
+			sizeof(dummy_socinfo.build_id));
 	} else if (early_machine_is_lito()) {
 		dummy_socinfo.id = 400;
 		strlcpy(dummy_socinfo.build_id, "lito - ",
