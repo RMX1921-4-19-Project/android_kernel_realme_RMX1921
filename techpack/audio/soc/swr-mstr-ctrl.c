@@ -827,6 +827,11 @@ static int swrm_cmd_fifo_rd_cmd(struct swr_mstr_ctrl *swrm, int *cmd_data,
 	u32 val;
 	u32 retry_attempt = 0;
 
+	if (!dev_addr) {
+		dev_err(swrm->dev, "%s: invalid slave dev num\n", __func__);
+		return -EINVAL;
+	}
+
 	mutex_lock(&swrm->iolock);
 	val = swrm_get_packed_reg_val(&swrm->rcmd_id, len, dev_addr, reg_addr);
 	if (swrm->read) {
@@ -881,6 +886,11 @@ static int swrm_cmd_fifo_wr_cmd(struct swr_mstr_ctrl *swrm, u8 cmd_data,
 {
 	u32 val;
 	int ret = 0;
+
+	if (!dev_addr) {
+		dev_err(swrm->dev, "%s: invalid slave dev num\n", __func__);
+		return -EINVAL;
+	}
 
 	mutex_lock(&swrm->iolock);
 	if (!cmd_id)
@@ -1777,12 +1787,10 @@ static void swrm_enable_slave_irq(struct swr_mstr_ctrl *swrm)
 	dev_dbg(swrm->dev, "%s: slave status: 0x%x\n", __func__, status);
 	for (i = 0; i < (swrm->master.num_dev + 1); i++) {
 		if (status & SWRM_MCP_SLV_STATUS_MASK) {
-			if (!swrm->clk_stop_wakeup) {
-				swrm_cmd_fifo_rd_cmd(swrm, &temp, i, 0x0,
+			swrm_cmd_fifo_rd_cmd(swrm, &temp, i, 0x0,
 					SWRS_SCP_INT_STATUS_CLEAR_1, 1);
-				swrm_cmd_fifo_wr_cmd(swrm, 0xFF, i, 0x0,
+			swrm_cmd_fifo_wr_cmd(swrm, 0xFF, i, 0x0,
 					SWRS_SCP_INT_STATUS_CLEAR_1);
-			}
 			swrm_cmd_fifo_wr_cmd(swrm, 0x4, i, 0x0,
 					SWRS_SCP_INT_STATUS_MASK_1);
 		}
@@ -2194,9 +2202,7 @@ handle_irq:
 				 * re-enable Host IRQ and process slave pending
 				 * interrupts, if any.
 				 */
-				swrm->clk_stop_wakeup = true;
 				swrm_enable_slave_irq(swrm);
-				swrm->clk_stop_wakeup = false;
 			}
 			break;
 		default:
@@ -2776,8 +2782,6 @@ static int swrm_probe(struct platform_device *pdev)
 	swrm->dev_up = true;
 	swrm->state = SWR_MSTR_UP;
 	swrm->ipc_wakeup = false;
-	swrm->enable_slave_irq = false;
-	swrm->clk_stop_wakeup = false;
 	swrm->ipc_wakeup_triggered = false;
 	swrm->disable_div2_clk_switch = FALSE;
 	init_completion(&swrm->reset);
@@ -2882,6 +2886,10 @@ static int swrm_probe(struct platform_device *pdev)
 		dev_info(&pdev->dev,
 			 "%s: version specified in dtsi: 0x%x not match with HW read version 0x%x\n",
 			 __func__, swrm->version, swrm_hw_ver);
+	swrm->rd_fifo_depth = ((swr_master_read(swrm, SWRM_COMP_PARAMS)
+				& SWRM_COMP_PARAMS_RD_FIFO_DEPTH) >> 15);
+	swrm->wr_fifo_depth = ((swr_master_read(swrm, SWRM_COMP_PARAMS)
+				& SWRM_COMP_PARAMS_WR_FIFO_DEPTH) >> 10);
 	ret = swrm_master_init(swrm);
 	if (ret < 0) {
 		dev_err(&pdev->dev,
@@ -2897,11 +2905,6 @@ static int swrm_probe(struct platform_device *pdev)
 
 	if (pdev->dev.of_node)
 		of_register_swr_devices(&swrm->master);
-
-	swrm->rd_fifo_depth = ((swr_master_read(swrm, SWRM_COMP_PARAMS)
-				& SWRM_COMP_PARAMS_RD_FIFO_DEPTH) >> 15);
-	swrm->wr_fifo_depth = ((swr_master_read(swrm, SWRM_COMP_PARAMS)
-				& SWRM_COMP_PARAMS_WR_FIFO_DEPTH) >> 10);
 
 #ifdef CONFIG_DEBUG_FS
 	swrm->debugfs_swrm_dent = debugfs_create_dir(dev_name(&pdev->dev), 0);
@@ -3159,6 +3162,7 @@ static int swrm_runtime_suspend(struct device *dev)
 	struct swr_master *mstr = &swrm->master;
 	struct swr_device *swr_dev;
 	int current_state = 0;
+	struct irq_data *irq_data = NULL;
 
 	trace_printk("%s: pm_runtime: suspend state: %d\n",
 		__func__, swrm->state);
@@ -3267,7 +3271,9 @@ static int swrm_runtime_suspend(struct device *dev)
 
 		if (swrm->clk_stop_mode0_supp) {
 			if (swrm->wake_irq > 0) {
-				enable_irq(swrm->wake_irq);
+				irq_data = irq_get_irq_data(swrm->wake_irq);
+				if (irq_data && irqd_irq_disabled(irq_data))
+					enable_irq(swrm->wake_irq);
 			} else if (swrm->ipc_wakeup) {
 				msm_aud_evt_blocking_notifier_call_chain(
 					SWR_WAKE_IRQ_REGISTER, (void *)swrm);
