@@ -10,3 +10,4 @@ obj-$(CONFIG_ARCH_SDM450) += board-sdm450.o
 obj-$(CONFIG_ARCH_MSM8937) += board-msm8937.o
 obj-$(CONFIG_ARCH_SDM429) += board-sdm429.o
 obj-$(CONFIG_ARCH_SDM439) += board-sdm439.o
+obj-$(CONFIG_ARCH_SDM670) += board-sdm670.o
