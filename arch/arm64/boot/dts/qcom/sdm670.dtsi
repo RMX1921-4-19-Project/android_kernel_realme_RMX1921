@@ -668,6 +668,10 @@
 
 #include "sdm670-sde.dtsi"
 
+&pdc {
+	qcom,pdc-ranges = <0 480 94>, <94 609 15>, <115 630 7>;
+};
+
 &soc {
 	#address-cells = <1>;
 	#size-cells = <1>;
@@ -776,8 +780,9 @@
 	};
 
 	pdc: interrupt-controller@b220000{
-		compatible = "qcom,pdc-sdm670";
+		compatible = "qcom,sdm670-pdc";
 		reg = <0xb220000 0x400>;
+		qcom,pdc-ranges = <0 480 94>, <94 609 15>, <119 634 7>;
 		#interrupt-cells = <3>;
 		interrupt-parent = <&intc>;
 		interrupt-controller;
