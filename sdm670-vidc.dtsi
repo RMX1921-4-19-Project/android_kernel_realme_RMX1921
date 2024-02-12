@@ -51,7 +51,7 @@
 			label = "cnoc";
 			qcom,bus-master = <MSM_BUS_MASTER_AMPSS_M0>;
 			qcom,bus-slave = <MSM_BUS_SLAVE_VENUS_CFG>;
-			qcom,bus-governor = "performance";
+			qcom,mode = "performance";
 			qcom,bus-range-kbps = <1000 1000>;
 		};
 
@@ -60,7 +60,7 @@
 			label = "venus-ddr";
 			qcom,bus-master = <MSM_BUS_MASTER_VIDEO_P0>;
 			qcom,bus-slave = <MSM_BUS_SLAVE_EBI_CH0>;
-			qcom,bus-governor = "msm-vidc-ddr";
+			qcom,mode = "venus-ddr";
 			qcom,bus-range-kbps = <1000 3388000>;
 		};
 		arm9_bus_ddr {
@@ -68,7 +68,7 @@
 			label = "venus-arm9-ddr";
 			qcom,bus-master = <MSM_BUS_MASTER_VIDEO_P0>;
 			qcom,bus-slave = <MSM_BUS_SLAVE_EBI_CH0>;
-			qcom,bus-governor = "performance";
+			qcom,mode = "performance";
 			qcom,bus-range-kbps = <1000 1000>;
 		};
 
@@ -95,7 +95,7 @@
 			qcom,iommu-dma-addr-pool = <0x51000000 0x28000000>;
 			qcom,iommu-faults = "non-fatal";
 			qcom,iommu-pagetable = "LLC";
-			qcom,iommu-vmid = <0xB>; /* VMID_CP_BITSTREAM */
+			qcom,iommu-vmid = <0x9>; /* VMID_CP_BITSTREAM */
 			buffer-types = <0x241>;
 			virtual-addr-pool = <0x51000000 0x28000000>;
 			qcom,secure-context-bank;
@@ -166,7 +166,7 @@
 			label = "cnoc";
 			qcom,bus-master = <MSM_BUS_MASTER_AMPSS_M0>;
 			qcom,bus-slave = <MSM_BUS_SLAVE_VENUS_CFG>;
-			qcom,bus-governor = "performance";
+			qcom,mode = "performance";
 			qcom,bus-range-kbps = <1000 1000>;
 		};
 
@@ -175,7 +175,7 @@
 			label = "venus-ddr";
 			qcom,bus-master = <MSM_BUS_MASTER_VIDEO_P0>;
 			qcom,bus-slave = <MSM_BUS_SLAVE_EBI_CH0>;
-			qcom,bus-governor = "msm-vidc-ddr";
+			qcom,mode = "venus-ddr";
 			qcom,bus-range-kbps = <1000 2128000>;
 		};
 		arm9_bus_ddr {
@@ -183,7 +183,7 @@
 			label = "venus-arm9-ddr";
 			qcom,bus-master = <MSM_BUS_MASTER_VIDEO_P0>;
 			qcom,bus-slave = <MSM_BUS_SLAVE_EBI_CH0>;
-			qcom,bus-governor = "performance";
+			qcom,mode = "performance";
 			qcom,bus-range-kbps = <1000 1000>;
 		};
 
@@ -210,7 +210,7 @@
 			qcom,iommu-dma-addr-pool = <0x51000000 0x28000000>;
 			qcom,iommu-faults = "non-fatal";
 			qcom,iommu-pagetable = "LLC";
-			qcom,iommu-vmid = <0xB>; /* VMID_CP_BITSTREAM */
+			qcom,iommu-vmid = <0x9>; /* VMID_CP_BITSTREAM */
 			buffer-types = <0x241>;
 			virtual-addr-pool = <0x51000000 0x28000000>;
 			qcom,secure-context-bank;
