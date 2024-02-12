@@ -16,6 +16,7 @@
 #include <dt-bindings/clock/qcom,audio-ext-clk.h>
 
 &tavil_snd {
+	status = "disabled";
 	qcom,msm-mi2s-master = <1>, <1>, <1>, <1>, <1>;
 	qcom,audio-routing =
 		"AIF4 VI", "MCLK",
@@ -61,6 +62,7 @@
 };
 
 &tasha_snd {
+	status = "disabled";
 	qcom,msm-mi2s-master = <1>, <1>, <1>, <1>, <1>;
 	qcom,audio-routing =
 		"AIF4 VI", "MCLK",
@@ -135,10 +137,12 @@
 		"ADC2_IN", "ADC2_OUT",
 		"ADC3_IN", "ADC3_OUT";
 
-	qcom,msm-mi2s-master = <1>, <1>, <1>, <1>, <1>;
+	qcom,msm-mi2s-master = <1>, <0>, <1>, <0>, <0>;
+	qcom,msm-mi2s-ext-mclk = <0>, <1>, <0>, <0>, <0>;
 	qcom,msm-mclk-freq = <9600000>;
 	qcom,msm-mbhc-hphl-swh = <1>;
-	qcom,msm-mbhc-gnd-swh = <1>;
+	qcom,msm-mbhc-gnd-swh = <0>;
+	qcom,msm-micbias1-ext-cap;
 	qcom,msm-micbias2-ext-cap;
 	qcom,msm-hs-micbias-type = "external";
 	qcom,cdc-pdm-gpios = <&cdc_pdm_gpios>;
@@ -152,15 +156,14 @@
 			   "analog-codec", "msm_sdw_codec",
 			   "msm-ext-disp-audio-codec-rx";
 
-	qcom,wsa-max-devs = <2>;
-	qcom,wsa-devs = <&wsa881x_211_en>, <&wsa881x_212_en>,
-			<&wsa881x_213_en>, <&wsa881x_214_en>;
-	qcom,wsa-aux-dev-prefix = "SpkrLeft", "SpkrRight",
-				  "SpkrLeft", "SpkrRight";
+	qcom,wsa-disable;
+	qcom,wsa-max-devs = <0>;
+	oppo,speaker-pa = "nxp";
 };
 
 &soc {
 	wcd_usbc_analog_en1_gpio: msm_cdc_pinctrl_usbc_audio_en1 {
+		status = "disabled";
 		compatible = "qcom,msm-cdc-pinctrl";
 		pinctrl-names = "aud_active", "aud_sleep";
 		pinctrl-0 = <&wcd_usbc_analog_en1_active>;
@@ -198,6 +201,7 @@
 	};
 
 	cdc_sdw_gpios: sdw_clk_data_pinctrl {
+		status = "disabled";
 		compatible = "qcom,msm-cdc-pinctrl";
 		pinctrl-names = "aud_active", "aud_sleep";
 		pinctrl-0 = <&sdw_clk_active &sdw_data_active>;
@@ -205,6 +209,7 @@
 	};
 
 	wsa_spkr_en1: wsa_spkr_en1_pinctrl {
+		status = "disabled";
 		compatible = "qcom,msm-cdc-pinctrl";
 		pinctrl-names = "aud_active", "aud_sleep";
 		pinctrl-0 = <&spkr_1_sd_n_active>;
@@ -212,6 +217,7 @@
 	};
 
 	wsa_spkr_en2: wsa_spkr_en2_pinctrl {
+		status = "disabled";
 		compatible = "qcom,msm-cdc-pinctrl";
 		pinctrl-names = "aud_active", "aud_sleep";
 		pinctrl-0 = <&spkr_2_sd_n_active>;
@@ -219,7 +225,7 @@
 	};
 
 	msm_sdw_codec: msm-sdw-codec@62ec1000 {
-		status = "okay";
+		status = "disabled";
 		compatible = "qcom,msm-sdw-codec";
 		reg = <0x62ec1000 0x0>;
 		interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
@@ -312,6 +318,7 @@
 	};
 
 	wdsp_mgr: qcom,wcd-dsp-mgr {
+		status = "disabled";
 		compatible = "qcom,wcd-dsp-mgr";
 		qcom,wdsp-components = <&wcd934x_cdc 0>,
 				       <&wcd_spi_0 1>,
@@ -320,6 +327,7 @@
 	};
 
 	wdsp_glink: qcom,wcd-dsp-glink {
+		status = "disabled";
 		compatible = "qcom,wcd-dsp-glink";
 	};
 
@@ -373,6 +381,17 @@
 			clocks = <&clock_audio_lnbb AUDIO_PMIC_LNBB_CLK>;
 		};
 	};
+};
+
+//for tfa98xx
+&dai_mi2s2 {
+	compatible = "qcom,msm-dai-q6-mi2s";
+	qcom,msm-dai-q6-mi2s-dev-id = <2>;
+	qcom,msm-mi2s-rx-lines = <1>;
+	qcom,msm-mi2s-tx-lines = <2>;
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&ter_mi2s_active &ter_mi2s_sd0_active &ter_mi2s_sd1_active>;
+	pinctrl-1 = <&ter_mi2s_sleep &ter_mi2s_sd0_sleep &ter_mi2s_sd1_sleep>;
 };
 
 &slim_aud {
