@@ -1,5 +1,8 @@
 # SPDX-License-Identifier: GPL-2.0-only
 
+ccflags-$(CONFIG_IPA3_REGDUMP) += -Idrivers/platform/msm/ipa/ipa_v3/dump
+ccflags-$(CONFIG_IPA3_REGDUMP_IPA_4_5) += -Idrivers/platform/msm/ipa/ipa_v3/dump/ipa4.5
+
 obj-$(CONFIG_IPA3) += ipahal/
 
 obj-$(CONFIG_IPA3) += ipat.o
@@ -17,7 +20,3 @@ obj-$(CONFIG_IPA3_MHI_PROXY) += ipa_mhi_proxy.o
 obj-$(CONFIG_IPA3_MHI_PRIME_MANAGER) += ipa_mpm.o
 
 ipat-$(CONFIG_IPA3_REGDUMP) += dump/ipa_reg_dump.o
-
-ccflags-$(CONFIG_IPA3_REGDUMP) += -Idrivers/platform/msm/ipa/ipa_v3/dump
-
-ccflags-$(CONFIG_IPA3_REGDUMP_IPA_4_5) += -Idrivers/platform/msm/ipa/ipa_v3/dump/ipa4.5
