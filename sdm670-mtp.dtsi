@@ -371,16 +371,10 @@
 };
 
 &pm660l_wled {
+	qcom,string-cfg = <6>;
 	status = "okay";
-	qcom,led-strings-list = [01 02];
 };
 
 &mdss_mdp {
 	#cooling-cells = <2>;
-};
-
-&thermal_zones {
-	xo-therm-step {
-		status = "disabled";
-	};
 };
